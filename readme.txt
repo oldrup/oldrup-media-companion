@@ -1,6 +1,6 @@
 === Codeally Media Sanitizer ===
 Contributors: oldrup
-Tags: media, webp, performance, sanitization, image-optimization
+Tags: webp, filename, image-upload
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.2
@@ -8,54 +8,39 @@ Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Sanitizes upload filenames with Danish support, sets WebP quality to 70, purges scaled originals, and aligns MIME types.
+Adds WebP upload handling and filename cleanup for WordPress's Modern Image Formats plugin.
 
 == Description ==
-Codeally Media Sanitizer optimizes WordPress media handling by sanitizing uploaded filenames with full international character support, preserving human-readable Media Library post titles, enforcing WebP quality at 70%, purging raw unscaled files (>2560px), and synchronizing database MIME types when images convert to WebP.
+This plugin requires the official [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/) plugin. In **Settings > Media**, set its target image format to **WebP**. This plugin is configured for WebP; it does not support or optimize AVIF.
+
+Codeally Media Sanitizer adjusts WordPress media uploads when Modern Image Formats is active and configured for WebP. It:
+
+* Sets WordPress's WebP image-editor quality value to 70 when WebP images are generated.
+* Cleans filenames on uploads and sideloads, including transliteration of Danish letters and many other characters. It preserves the original filename as the Media Library title.
+* Deletes the unscaled original when WordPress generates a scaled image and records the original in attachment metadata. With WordPress's default big-image threshold, this generally applies when either image dimension exceeds 2560 pixels. The original file is deleted, so retain backups if you need it.
+* Updates the attachment's MIME type to `image/webp` when its attached file has a `.webp` extension.
+
+The plugin does not convert images by itself, scan or convert existing Media Library items, or perform bulk optimization. Its changes apply to uploads handled after activation. Existing images are unaffected unless you separately run a suitable image regeneration or migration workflow.
 
 Developed by [Bjarne Oldrup](https://oldrup.dk/) and sponsored by [Codeally](https://codeally.dk/).
 Filename sanitization character mapping adapted and expanded from [Clean Image Filenames](https://wordpress.org/plugins/clean-image-filenames/).
 
 == Frequently Asked Questions ==
 
-=== Why should I use Codeally Media Sanitizer? ===
-- **Clean & Safe URLs:** Special characters (like Danish æ, ø, å) and spaces in raw filenames create messy percent-encoded URLs and potential server path issues.
-- **Readable Media Titles:** Standard filename cleaning alters the visible attachment title; this plugin preserves the original human-readable string as the Media Library post title.
-- **Storage Preservation:** Automatically deletes any oversized original unscaled file (>2560px) once WordPress generates the `-scaled` master image, saving server disk space.
-- **WebP Quality Control:** Forces WebP image sub-sizes to process at an optimized baseline quality of 70%.
-- **Database MIME Alignment:** Ensures `post_mime_type` in `wp_posts` is updated to `image/webp` when the physical file on disk is converted to `.webp`.
-
-=== Who is this plugin intended for? ===
-This plugin provides a lightweight, minimalist execution pipeline with zero admin interface bloat. It is designed for experienced WordPress users and site builders who understand the WordPress uploads structure, know how thumbnail regeneration behaves, and maintain working site backups.
-
 === How do I set up and configure the plugin? ===
-1. Install and activate the official [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/) plugin by the WordPress Performance Team.
-2. Go to **Settings > Media** and change the target image format to **WebP**.
-3. Activate this plugin (or import the code into the Code Snippets plugin).
-4. Upload media through **Media > Add New** or directly inside any Block Editor image block. Filenames automatically sanitize, titles remain readable, unscaled original files (>2560px) auto-delete post-scaling, and database MIME types align to WebP.
+1. Install and activate the official [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/) plugin.
+2. Go to **Settings > Media** and select **WebP** as the target format. Modern Image Formats may default to AVIF, which this plugin does not support.
+3. Install and activate Codeally Media Sanitizer.
+4. Upload images through WordPress. The plugin applies its filename, WebP quality, original-file cleanup, and MIME-type behavior as described above.
 
 === Can I use this plugin to convert existing media to WebP? ===
-Not on its own. This plugin focuses on optimizing incoming uploads, filename sanitization, WebP quality limits, and storage cleanup. It does not contain a background database scanner or bulk converter. However, you can convert existing attachments by pairing this plugin stack with a thumbnail regeneration tool (such as *Force Regenerate Thumbnails*).
+No. The plugin does not process existing media or include a bulk converter. A separate regeneration or migration workflow may regenerate image sizes with Modern Image Formats active, but the result depends on that plugin's settings and does not automatically update image URLs embedded in post content. Back up the site and understand the fallback-image behavior before regenerating media.
 
 === How does this work together with thumbnail regeneration plugins? ===
-When you run a tool like *Force Regenerate Thumbnails* with *Modern Image Formats* active, WordPress rebuilds all sub-size images.
-- **If "Output fallback images" is DISABLED:** The regeneration process deletes older `.jpg` sub-sizes and creates *only* `.webp` versions. If existing posts contain hardcoded `<img>` tags pointing to `.jpg` files, those image links will 404.
-- **If "Output fallback images" is ENABLED:** WordPress creates both `.jpg` and `.webp` sub-sizes. Existing post image links pointing to `.jpg` continue to resolve, while modern browsers automatically request the new `.webp` versions.
-
-=== Should I go "all-in" on WebP without fallback images? ===
-WebP is natively supported by over 98% of modern web browsers across desktop and mobile devices. Going "pure WebP" (disabling fallback JPEGs) offers maximum server storage savings.
-- **For brand-new websites:** Going pure WebP is highly recommended.
-- **For existing websites with legacy content:** Unless you plan to run a database search-and-replace to update `.jpg` URLs to `.webp` in `post_content`, keep **"Output fallback images"** checked under **Settings > Media** to maintain total backwards compatibility for older posts.
-
-=== What alternatives exist for bulk converting legacy images on existing sites? ===
-If you prefer a 1-click bulk conversion tool that preserves original files without needing manual database edits, consider these open-source plugins from WordPress.org:
-- **EWWW Image Optimizer:** Offers local WebP conversion serving WebP via `<picture>` rewrite rules while leaving original files untouched.
-- **Converter for Media:** 1-click bulk conversion for WebP, storing optimized files separately in `/uploads-webpc/` to avoid breaking existing post references.
-- **WebP Express:** A free and open-source plugin serving WebP dynamically via `.htaccess` or server rewrite rules.
+Regeneration behavior depends on Modern Image Formats settings and the regeneration tool. If fallback images are disabled, regenerated JPEG sub-sizes may be removed and existing content that links directly to those files may break. Keeping fallback images can preserve those JPEG files. This plugin does not rewrite URLs in posts.
 
 === How does this plugin work with form plugins like WS Form? ===
-Filename sanitization is intentionally bypassed for form uploads to respect custom form naming rules and variables. However, WebP conversion, 70% quality limits, and purging of oversized raw originals (>2560px) still execute automatically.
-- **Note:** This behavior has been lightly verified with WS Form, but has not been tested with other form plugins.
+Filename sanitization is applied through WordPress's upload and sideload filters. Form plugins may handle files differently, so behavior can depend on how a particular plugin passes files through WordPress. Compatibility with form plugins is not guaranteed.
 
 === Where can I find official documentation and references? ===
 - [WordPress Performance Team: Modern Image Formats Plugin](https://wordpress.org/plugins/webp-uploads/)
@@ -63,21 +48,17 @@ Filename sanitization is intentionally bypassed for form uploads to respect cust
 - [WordPress Core Notes: Handling of Big Images in WP 5.3+](https://make.wordpress.org/core/2019/10/09/introducing-handling-of-big-images-in-wordpress-5-3/)
 
 == Installation ==
-1. Upload the snippet to your WordPress `/wp-content/plugins/` directory, or import into the Code Snippets plugin.
-2. Activate the plugin/snippet through the WordPress admin.
+1. Install and activate the [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/) plugin.
+2. In **Settings > Media**, select **WebP** as the target format.
+3. Upload the Codeally Media Sanitizer plugin to your WordPress `/wp-content/plugins/` directory.
+4. Activate it through the WordPress admin.
 
 == Changelog ==
 = 1.2.3 =
 - First public release
 
 == Screenshots ==
-1. 4700 KB - Standard jpeg format, default quality 82, original kept
-2. 4000 KB - Modern File Formats enabled, WebP, default quality 82, original kept
-3.  300 KB - Codeally Media Sanitizer enabled, WebP, baseline quality 70, original kept
-4. Modern File Formats recommended settings used: WebP, no fallback
-
-== Screenshots ==
 1. screenshot-1.png: Standard JPEG format, default quality 82, original file kept, total 4700 KB.
 2. screenshot-2.png: Modern Image Formats enabled, WebP quality 82, original kept, total 4000 KB.
-3. screenshot-3.png: Codeally Media Sanitize enaled, WebP quality 70, original purged, total 300 KB.
-4. screenshot-4.png: Used settings under Settings > Media: WebP without fallback JPEG output.
+3. screenshot-3.png: Codeally Media Sanitizer enabled, WebP quality 70, original purged, total 300 KB.
+4. screenshot-4.png: Applied settings under Settings > Media: WebP without fallback JPEG output.

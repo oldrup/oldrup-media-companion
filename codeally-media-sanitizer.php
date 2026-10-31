@@ -13,7 +13,7 @@ declare(strict_types=1);
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       codeally-media-sanitizer
- * Tags:              media, webp, performance, sanitization, image-optimization
+ * Tags:              webp, filename, image-upload
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
