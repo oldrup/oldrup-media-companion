@@ -4,7 +4,7 @@ declare(strict_types=1);
 /**
  * Plugin Name:       Codeally Media Sanitizer
  * Plugin URI:        https://github.com/oldrup/codeally-media-sanitizer
- * Description:       Sanitizes upload filenames with Danish support, sets WebP quality to 70, purges scaled originals, and aligns MIME types.
+ * Description:       Sanitizes upload filenames with broad Latin, Greek, and Cyrillic character support, sets WebP quality to 70, removes unscaled originals after scaling, and corrects WebP MIME types.
  * Version:           1.2.3
  * Requires at least: 6.9
  * Requires PHP:      8.2

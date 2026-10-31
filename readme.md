@@ -7,7 +7,7 @@ A small companion to WordPress's [Modern Image Formats](https://wordpress.org/pl
 ## What it does
 
 - Sets WordPress's WebP image-editor quality value to **70** when WebP images are generated.
-- Cleans filenames on uploads and sideloads, including transliteration of Danish letters and many other characters. The original filename (without its extension) is retained as the Media Library title.
+- Cleans filenames on uploads and sideloads, transliterating many Latin, Greek, and Cyrillic characters into filename-safe Latin text. The original filename (without its extension) is retained as the Media Library title.
 - Deletes the unscaled original when WordPress generates a scaled image and records the original in attachment metadata. With WordPress's default big-image threshold, this generally applies when either image dimension exceeds 2560 pixels. **The original file is deleted**; keep backups if you may need it.
 - Updates the attachment's MIME type to `image/webp` when its attached file has a `.webp` extension.
 
