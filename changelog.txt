@@ -1,4 +1,7 @@
 == Changelog ==
+= 1.3.0 =
+- Rebrand as Oldrup Media Companion and update plugin identifiers.
+
 = 1.2.2 =
 - Add author and contributor in headers
 
@@ -6,7 +9,7 @@
 - Add screenshots
 
 = 1.2.0 =
-- Rename plugin to Codeally Media Sanitizer
+- Rename plugin to Oldrup Media Companion
 
 = 1.1.0 =
 - Added defensive `wp-admin/includes/file.php` inclusion before purging unscaled raw originals to prevent REST/front-end execution crashes.

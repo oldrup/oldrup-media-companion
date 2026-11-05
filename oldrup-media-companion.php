@@ -2,17 +2,17 @@
 declare(strict_types=1);
 
 /**
- * Plugin Name:       Codeally Media Sanitizer
- * Plugin URI:        https://github.com/oldrup/codeally-media-sanitizer
- * Description:       Sanitizes upload filenames with broad Latin, Greek, and Cyrillic character support, sets WebP quality to 70, removes unscaled originals after scaling, and corrects WebP MIME types.
- * Version:           1.2.3
+ * Plugin Name:       Oldrup Media Companion
+ * Plugin URI:        https://github.com/oldrup/oldrup-media-companion
+ * Description:       Fine-tunes WebP quality, cleans upload filenames, removes unscaled originals after scaling, and corrects WebP MIME types alongside Modern Image Formats.
+ * Version:           1.3.0
  * Requires at least: 6.9
  * Requires PHP:      8.2
- * Author:            Codeally
- * Author URI:        https://codeally.dk/
+ * Author:            Bjarne Oldrup
+ * Author URI:        https://oldrup.dk/
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       codeally-media-sanitizer
+ * Text Domain:       oldrup-media-companion
  * Tags:              webp, filename, image-upload
  */
 
@@ -25,15 +25,15 @@ if ( ! defined( 'ABSPATH' ) ) {
    ========================================================================== */
 
 register_activation_hook( __FILE__, static function() : void {
-    set_transient( '_cdly_media_sanitizer_activated', true, 60 );
+    set_transient( '_oldrup_media_companion_activated', true, 60 );
 } );
 
 add_action( 'admin_notices', static function() : void {
-    if ( ! get_transient( '_cdly_media_sanitizer_activated' ) ) {
+    if ( ! get_transient( '_oldrup_media_companion_activated' ) ) {
         return;
     }
 
-    delete_transient( '_cdly_media_sanitizer_activated' );
+    delete_transient( '_oldrup_media_companion_activated' );
 
     if ( ! current_user_can( 'activate_plugins' ) ) {
         return;
@@ -45,9 +45,9 @@ add_action( 'admin_notices', static function() : void {
     if ( ! $mif_active ) {
         $message = sprintf(
             /* translators: 1: Plugin name, 2: Link to Modern Image Formats plugin */
-            __( '%1$s is active. For automatic WebP conversion, ensure the %2$s plugin is installed and configured to WebP under Settings > Media.', 'codeally-media-sanitizer' ),
-            '<strong>' . esc_html__( 'Codeally Media Sanitizer', 'codeally-media-sanitizer' ) . '</strong>',
-            '<a href="' . esc_url( admin_url( 'plugin-install.php?tab=plugin-information&plugin=webp-uploads' ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Modern Image Formats', 'codeally-media-sanitizer' ) . '</a>'
+            __( '%1$s is active. For automatic WebP conversion, ensure the %2$s plugin is installed and configured to WebP under Settings > Media.', 'oldrup-media-companion' ),
+            '<strong>' . esc_html__( 'Oldrup Media Companion', 'oldrup-media-companion' ) . '</strong>',
+            '<a href="' . esc_url( admin_url( 'plugin-install.php?tab=plugin-information&plugin=webp-uploads' ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Modern Image Formats', 'oldrup-media-companion' ) . '</a>'
         );
 
         wp_admin_notice(
@@ -64,8 +64,8 @@ add_action( 'admin_notices', static function() : void {
    2. FILENAME SANITIZATION & ATTACHMENT TITLE
    ========================================================================== */
 
-add_filter( 'wp_handle_upload_prefilter', 'cdly_clean_uploaded_filename' );
-add_filter( 'wp_handle_sideload_prefilter', 'cdly_clean_uploaded_filename' );
+add_filter( 'wp_handle_upload_prefilter', 'oldrup_clean_uploaded_filename' );
+add_filter( 'wp_handle_sideload_prefilter', 'oldrup_clean_uploaded_filename' );
 
 /**
  * Prefilter upload array to sanitize filenames and store original title in memory.
@@ -73,13 +73,13 @@ add_filter( 'wp_handle_sideload_prefilter', 'cdly_clean_uploaded_filename' );
  * @param array<string, mixed> $file Uploaded file data.
  * @return array<string, mixed>
  */
-function cdly_clean_uploaded_filename( array $file ) : array {
+function oldrup_clean_uploaded_filename( array $file ) : array {
     $original     = pathinfo( $file['name'], PATHINFO_FILENAME );
-    $file['name'] = cdly_clean_filename( $file['name'] );
+    $file['name'] = oldrup_clean_filename( $file['name'] );
 
     if ( is_string( $original ) && '' !== $original ) {
         $clean_key = pathinfo( $file['name'], PATHINFO_FILENAME );
-        $GLOBALS['cdly_original_titles'][ $clean_key ] = $original;
+        $GLOBALS['oldrup_original_titles'][ $clean_key ] = $original;
     }
 
     return $file;
@@ -92,7 +92,7 @@ function cdly_clean_uploaded_filename( array $file ) : array {
  * @link https://wordpress.org/plugins/clean-image-filenames/
  * @license GPL-2.0-or-later
  */
-function cdly_clean_filename( string $filename ) : string {
+function oldrup_clean_filename( string $filename ) : string {
     $info = pathinfo( $filename );
     $name = $info['filename'] ?? '';
     $ext  = $info['extension'] ?? '';
@@ -141,13 +141,13 @@ add_action( 'add_attachment', static function( int $attachment_id ) : void {
     if ( is_string( $file ) ) {
         $clean_key = pathinfo( $file, PATHINFO_FILENAME );
 
-        if ( isset( $GLOBALS['cdly_original_titles'][ $clean_key ] ) ) {
+        if ( isset( $GLOBALS['oldrup_original_titles'][ $clean_key ] ) ) {
             wp_update_post( array(
                 'ID'         => $attachment_id,
-                'post_title' => $GLOBALS['cdly_original_titles'][ $clean_key ],
+                'post_title' => $GLOBALS['oldrup_original_titles'][ $clean_key ],
             ) );
 
-            unset( $GLOBALS['cdly_original_titles'][ $clean_key ] );
+            unset( $GLOBALS['oldrup_original_titles'][ $clean_key ] );
         }
     }
 } );

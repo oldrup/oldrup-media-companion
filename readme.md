@@ -1,6 +1,6 @@
-# Codeally Media Sanitizer
+# Oldrup Media Companion
 
-A small companion to WordPress's [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/) plugin. It adjusts how WordPress handles new image uploads when Modern Image Formats is configured to use WebP.
+A small companion to WordPress's [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/) plugin. It fine-tunes WebP quality, cleans upload filenames to avoid hosting complications, and removes the unscaled original after WordPress creates a scaled image.
 
 > **Requirement:** Install and activate Modern Image Formats, then select **WebP** under **Settings > Media**. This plugin does not support or optimize AVIF.
 
@@ -19,7 +19,7 @@ This plugin does not convert or compress images by itself. It relies on Modern I
 
 1. Install and activate [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/).
 2. Go to **Settings > Media** and select **WebP** as the target format. Modern Image Formats may default to AVIF, which this plugin does not support.
-3. Install and activate Codeally Media Sanitizer.
+3. Install and activate Oldrup Media Companion.
 4. Upload images through WordPress.
 
 ## Existing media
@@ -36,13 +36,13 @@ Filename cleanup uses WordPress's upload and sideload filters. Form plugins may 
 | --- | --- |
 | ![Default JPEG output](assets/screenshot-1.png) | ![Modern Image Formats with WebP](assets/screenshot-2.png) |
 
-| WebP output with Codeally Media Sanitizer | WebP settings in WordPress |
+| WebP output with Oldrup Media Companion | WebP settings in WordPress |
 | --- | --- |
-| ![WebP output with Codeally Media Sanitizer](assets/screenshot-3.png) | ![WebP settings in WordPress](assets/screenshot-4.png) |
+| ![WebP output with Oldrup Media Companion](assets/screenshot-3.png) | ![WebP settings in WordPress](assets/screenshot-4.png) |
 
 ## Credits and references
 
-Developed by [Bjarne Oldrup](https://oldrup.dk/) and sponsored by [Codeally](https://codeally.dk/).
+Developed by [Bjarne Oldrup](https://oldrup.dk/). Source code is hosted on [GitHub](https://github.com/oldrup/oldrup-media-companion).
 
 Filename character mapping adapted and expanded from [Clean Image Filenames](https://wordpress.org/plugins/clean-image-filenames/).
 

@@ -1,19 +1,19 @@
-=== Codeally Media Sanitizer ===
+=== Oldrup Media Companion ===
 Contributors: oldrup
 Tags: webp, filename, image-upload
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.2.3
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Adds WebP upload handling and filename cleanup for WordPress's Modern Image Formats plugin.
+Fine-tunes WebP quality, cleans upload filenames, and removes unscaled originals alongside WordPress's Modern Image Formats plugin.
 
 == Description ==
 This plugin requires the official [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/) plugin. In **Settings > Media**, set its target image format to **WebP**. This plugin is configured for WebP; it does not support or optimize AVIF.
 
-Codeally Media Sanitizer adjusts WordPress media uploads when Modern Image Formats is active and configured for WebP. It:
+Oldrup Media Companion adjusts WordPress media uploads when Modern Image Formats is active and configured for WebP. It:
 
 * Sets WordPress's WebP image-editor quality value to 70 when WebP images are generated.
 * Cleans filenames on uploads and sideloads, transliterating many Latin, Greek, and Cyrillic characters into filename-safe Latin text. It preserves the original filename as the Media Library title.
@@ -22,7 +22,7 @@ Codeally Media Sanitizer adjusts WordPress media uploads when Modern Image Forma
 
 The plugin does not convert images by itself, scan or convert existing Media Library items, or perform bulk optimization. Its changes apply to uploads handled after activation. Existing images are unaffected unless you separately run a suitable image regeneration or migration workflow.
 
-Developed by [Bjarne Oldrup](https://oldrup.dk/) and sponsored by [Codeally](https://codeally.dk/).
+Developed by [Bjarne Oldrup](https://oldrup.dk/). Source code is hosted on [GitHub](https://github.com/oldrup/oldrup-media-companion).
 Filename sanitization character mapping adapted and expanded from [Clean Image Filenames](https://wordpress.org/plugins/clean-image-filenames/).
 
 == Frequently Asked Questions ==
@@ -30,7 +30,7 @@ Filename sanitization character mapping adapted and expanded from [Clean Image F
 === How do I set up and configure the plugin? ===
 1. Install and activate the official [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/) plugin.
 2. Go to **Settings > Media** and select **WebP** as the target format. Modern Image Formats may default to AVIF, which this plugin does not support.
-3. Install and activate Codeally Media Sanitizer.
+3. Install and activate Oldrup Media Companion.
 4. Upload images through WordPress. The plugin applies its filename, WebP quality, original-file cleanup, and MIME-type behavior as described above.
 
 === Can I use this plugin to convert existing media to WebP? ===
@@ -50,15 +50,18 @@ Filename sanitization is applied through WordPress's upload and sideload filters
 == Installation ==
 1. Install and activate the [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/) plugin.
 2. In **Settings > Media**, select **WebP** as the target format.
-3. Upload the Codeally Media Sanitizer plugin to your WordPress `/wp-content/plugins/` directory.
+3. Upload the Oldrup Media Companion plugin to your WordPress `/wp-content/plugins/` directory.
 4. Activate it through the WordPress admin.
 
 == Changelog ==
+= 1.3.0 =
+- Rebrand as Oldrup Media Companion and update plugin identifiers.
+
 = 1.2.3 =
 - First public release
 
 == Screenshots ==
 1. screenshot-1.png: Standard JPEG format, default quality 82, original file kept, total 4700 KB.
 2. screenshot-2.png: Modern Image Formats enabled, WebP quality 82, original kept, total 4000 KB.
-3. screenshot-3.png: Codeally Media Sanitizer enabled, WebP quality 70, original purged, total 300 KB.
+3. screenshot-3.png: Oldrup Media Companion enabled, WebP quality 70, original purged, total 300 KB.
 4. screenshot-4.png: Applied settings under Settings > Media: WebP without fallback JPEG output.
